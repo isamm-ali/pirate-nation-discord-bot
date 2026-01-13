@@ -44,8 +44,8 @@ async def send_dm(user: discord.User, message: str):
 async def on_member_join(member):
     msg = (
         "Heyy, welcome to Pirate Nation! 🏴‍☠️\n\n"
-        "check #giveaways for current fruit events\n"
-        "check #announcements for server updates\n\n"
+        "check <#1458860489772634318> for current fruit events\n"
+        "check <#1458860489772634317> for server updates\n\n"
         "Hope you enjoy your time here!"
     )
     
