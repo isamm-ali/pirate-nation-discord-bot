@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import webserver
 import random
+import re
 #----------------------------------------------------------------------------
 
 load_dotenv()
@@ -270,6 +271,61 @@ async def bounty(interaction: discord.Interaction, user: discord.User = None):
     embed.set_footer(text="Pirate Nation")
 
     await interaction.response.send_message(embed=embed)
+
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    if message.author.guild_permissions.administrator:
+        await bot.process_application_commands(message)
+        return
+
+    bad_words = {
+        "fuck","bitch","lund","rape","nigger","nigga","harami","lodu","loda",
+        "chutiya","madarchod","chut","bhosdike","bsdk","gaandu",
+        "lode","cunt","pussy","dick","porn","sex","masturbate",
+        "cum","gandu","rapist","molest","randi","rand","behenchod","bhenchod",
+        "tatti","tatti ka","gaand","mc","mcchod","kutta","kutte","bitchass","fuckass",
+    }
+
+    words = re.findall(r"\b\w+\b", message.content.lower())
+
+    for w in words:
+        if w in bad_words:
+            await message.delete()
+            await message.channel.send(
+                f"Hey!{message.author.mention}, please watch your language! ❌"
+            )
+            return
+
+    await bot.process_application_commands(message)
+
+
+INVITE_REGEX = re.compile(
+    r"(discord\.gg\/|discord\.com\/invite\/)", re.IGNORECASE
+)
+
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+
+    if message.author.guild_permissions.administrator:
+        await bot.process_application_commands(message)
+        return
+
+    content = message.content.lower()
+
+    if INVITE_REGEX.search(content):
+        await message.delete()
+        await message.channel.send(
+            f"Hey! {message.author.mention}, server invite links are not allowed here. ❌"
+        )
+        return
+
+
 
     #----------------------------------------------------------------------------
 
