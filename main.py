@@ -21,14 +21,15 @@ intents.message_content = True
 bot = discord.Client(intents=intents)
 tree = app_commands.CommandTree(bot)
 
-
+# ----------------------------------------
 
 @bot.event
 async def on_ready():
     await tree.sync()
     print(f"Logged in as {bot.user}")
 
-
+# ----------------------------------------
+# WELCOME DM
 
 async def send_dm(user: discord.User, message: str):
     try:
@@ -39,13 +40,16 @@ async def send_dm(user: discord.User, message: str):
 @bot.event
 async def on_member_join(member):
     msg = (
-        "Heyy, welcome to Pirate Nation! 🏴‍☠️\n\n"
-        "Check <#1458860489772634318> for current fruit events\n"
-        "Check <#1458860489772634317> for server updates\n\n"
-        "Hope you enjoy your time here!"
+        "Welcome to **影 | Vanquished**.\n\n"
+        "A social Roblox Blox Fruits community for chill chats and activity.\n\n"
+        "Check <#1458860489772634318> for giveaways.\n"
+        "Introduce yourself here <#1458860490695508229>\n\n"
+        "Stay active. Stay restless."
     )
     await send_dm(member, msg)
 
+# ----------------------------------------
+# LOGGING
 
 LOG_CHANNEL_ID = 1458860493228740652
 
@@ -63,14 +67,13 @@ async def on_message_delete(message):
             deleter = entry.user.mention
             break
 
-    embed = discord.Embed(title="message deleted", color=0x8000FF)
+    embed = discord.Embed(title="message removed", color=0x7200E6)
     embed.add_field(name="author", value=message.author.mention, inline=False)
-    embed.add_field(name="deleted by", value=deleter, inline=False)
-    embed.add_field(name="channel", value=message.channel.mention, inline=False)
-
     if message.content:
         embed.add_field(name="content", value=message.content[:1000], inline=False)
-
+    embed.add_field(name="removed by", value=deleter, inline=False)
+    embed.add_field(name="channel", value=message.channel.mention, inline=False)
+    embed.set_footer(text="影 | Vanquished")
     await log_channel.send(embed=embed)
 
 @bot.event
@@ -81,6 +84,7 @@ async def on_member_ban(guild, user):
         description=f"**user:** {user.mention}",
         color=0xFF3B3B
     )
+    embed.set_footer(text="影 | Vanquished")
     await log_channel.send(embed=embed)
 
 @bot.event
@@ -95,10 +99,12 @@ async def on_member_remove(member):
                 description=f"**user:** {member.mention}\n**by:** {entry.user.mention}",
                 color=0xFFA500
             )
+            embed.set_footer(text="影 | Vanquished")
             await log_channel.send(embed=embed)
             return
 
-
+# ----------------------------------------
+# SLASH COMMANDS
 
 @tree.command(name="coinflip", description="flip a coin")
 async def coinflip(interaction: discord.Interaction):
@@ -120,8 +126,8 @@ async def announce(interaction: discord.Interaction, title: str, message: str):
 
     channel = bot.get_channel(ANNOUNCE_CHANNEL_ID)
 
-    embed = discord.Embed(title=title, description=message, color=0x8000FF)
-    embed.set_footer(text="Pirate Nation")
+    embed = discord.Embed(title=title, description=message, color=0x7200E6)
+    embed.set_footer(text="影 | Vanquished")
 
     await channel.send(embed=embed)
     await interaction.response.send_message("announcement sent.", ephemeral=True)
@@ -130,36 +136,36 @@ async def announce(interaction: discord.Interaction, title: str, message: str):
 async def serverinfo(interaction: discord.Interaction):
 
     embed = discord.Embed(
-        title="Pirate Nation — Server Information",
+        title="影 | Vanquished — Server Information",
         description=(
-            "Pirate Nation is a Blox Fruits community server created for players who want organized activity, fair trading, and real interaction.\n\n"
-            "Built to grow steady, stay active, and keep things simple."
+            "A social Roblox Blox Fruits community built for chill chats, events, and activity.\n\n"
+            "Late nights. Restless minds. Active energy."
         ),
         color=0x7200E6
     )
 
     embed.add_field(name="📅 Created On", value="11 January 2026", inline=False)
     embed.add_field(name="👑 Owner", value="Pirate Hunter", inline=False)
-    embed.add_field(name="🏴‍☠️ Focus", value="Blox Fruits trading, grinding, giveaways", inline=False)
+    embed.add_field(name="🌙 Identity", value="Social • Roblox • Blox Fruits", inline=False)
     embed.add_field(name="🔒 Moderation", value="Active staff & logging enabled", inline=False)
 
-    embed.set_footer(text="Pirate Nation Official Server")
+    embed.set_footer(text="影 | Vanquished")
     await interaction.response.send_message(embed=embed)
 
-@tree.command(name="fortune", description="get a pirate fortune")
+@tree.command(name="fortune", description="receive a fortune")
 async def fortune(interaction: discord.Interaction):
 
     fortunes = [
-        "a legendary fruit awaits you soon",
-        "a trade in your favor is coming",
-        "danger follows your next raid",
-        "today is a lucky grind day",
-        "a surprise giveaway is near",
-        "your next spin will shock the seas",
-        "a powerful ally will join your crew",
-        "beware of false traders in the shadows",
-        "victory waits in your next battle",
-        "the seas favor your journey today"
+        "the night favors your grind",
+        "a rare trade approaches",
+        "your next raid will succeed",
+        "restless energy surrounds you",
+        "a surprise event awaits",
+        "the shadows guide your path",
+        "a powerful ally will appear",
+        "fortune follows the persistent",
+        "stay active, stay ahead",
+        "the tide turns in your favor"
     ]
 
     await interaction.response.send_message(f"🔮 {random.choice(fortunes)}")
@@ -169,8 +175,8 @@ async def stats(interaction: discord.Interaction):
     guild = interaction.guild
     await interaction.response.send_message(f"👥 members: **{guild.member_count}**")
 
-@tree.command(name="bounty", description="see a pirate's bounty")
-@app_commands.describe(user="user to check bounty for")
+@tree.command(name="bounty", description="see a user's bounty")
+@app_commands.describe(user="user to check")
 async def bounty(interaction: discord.Interaction, user: discord.User = None):
 
     if user is None:
@@ -192,26 +198,19 @@ async def bounty(interaction: discord.Interaction, user: discord.User = None):
 
     written = format_bounty(amount)
 
-    if amount >= 4_000_000_000:
-        tier, emoji, color = "Pirate King", "👑", 0xFFD700
-    elif amount >= 1_000_000_000:
-        tier, emoji, color = "Emperor Class", "🐦‍🔥", 0xFF4500
-    elif amount >= 500_000_000:
-        tier, emoji, color = "Legendary Pirate", "🔥", 0xFF4500
-    elif amount >= 100_000_000:
-        tier, emoji, color = "Veteran Pirate", "⚔️", 0x8000FF
-    else:
-        tier, emoji, color = "Rising Pirate", "🏴‍☠️", 0x0F3D2E
+    embed = discord.Embed(
+        title="⚔️ Vanquished Bounty",
+        color=0x7200E6
+    )
 
-    embed = discord.Embed(title=f"{emoji} Pirate Bounty", color=color)
-    embed.add_field(name="Pirate", value=user.mention, inline=False)
-    embed.add_field(name="Bounty", value=f"**{written} beli**", inline=False)
-    embed.add_field(name="Tier", value=tier, inline=False)
+    embed.add_field(name="user", value=user.mention, inline=False)
+    embed.add_field(name="bounty", value=f"**{written} beli**", inline=False)
+    embed.set_footer(text="影 | Vanquished")
 
-    embed.set_footer(text="Pirate Nation")
     await interaction.response.send_message(embed=embed)
 
-
+# ----------------------------------------
+# CHAT FILTER
 
 INVITE_REGEX = re.compile(r"(discord\.gg\/|discord\.com\/invite\/)", re.IGNORECASE)
 
@@ -220,27 +219,22 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    # Skip admins
     if message.author.guild_permissions.administrator:
         await bot.process_application_commands(message)
         return
 
     content = message.content.lower()
 
-    # Invite filter
     if INVITE_REGEX.search(content):
         await message.delete()
         await message.channel.send(
-            f"Hey {message.author.mention}, server invite links are not allowed here. ❌"
+            f"{message.author.mention}, invite links are not allowed here."
         )
         return
 
-    # Bad word filter
     bad_words = {
-        "fuck","bitch","lund","rape","nigga","nigger","harami","loda","lodu",
-        "chutiya","madarchod","chut","bhosdike","bsdk","gaandu","lode",
-        "cunt","pussy","dick","porn","sex","masturbate","cum","rapist",
-        "molest","randi","rand","behenchod","tatti","gaand","mc","kutta"
+        "fuck","bitch","rape","nigga","nigger","chutiya","madarchod","dumbass",
+        "bhosdike","cunt","pussy","dick","porn","sex","cum","molest"
     }
 
     words = re.findall(r"\b\w+\b", content)
@@ -249,13 +243,13 @@ async def on_message(message):
         if w in bad_words:
             await message.delete()
             await message.channel.send(
-                f"Hey {message.author.mention}, please watch your language! ❌"
+                f"{message.author.mention}, keep the chat clean."
             )
             return
 
     await bot.process_application_commands(message)
 
-
+# ----------------------------------------
 
 webserver.keep_alive()
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
