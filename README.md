@@ -1,4 +1,4 @@
-# Pirate Nation Bot 🏴‍☠️
+# The Vanquished Bot 🏴‍☠️
 
 A lightweight Discord bot built for the Pirate Nation server.  
 Designed to handle moderation, logging, announcements, and fun interactive commands — without requiring a database or 24/7 uptime.
